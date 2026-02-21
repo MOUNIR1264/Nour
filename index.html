@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Joyeux anniversaire NOUR ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+#puzzle {
+    width: 300px;
+    height: 300px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 2px;
+    margin: 20px auto;
+}
+
+.piece {
+    width: 100%;
+    height: 100%;
+    background-image: url("photo-nour.jpg");
+    background-size: 300px 300px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.piece.selected {
+    outline: 3px solid #fff;
+}
+
+#message {
+    display: none;
+    font-size: 22px;
+    background: rgba(0,0,0,0.3);
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>🎂 Joyeux anniversaire NOUR 🎂</h1>
+    <p>Reconstitue le puzzle 💖</p>
+
+    <div id="puzzle"></div>
+
+    <div id="message">
+        💕 NOUR 💕<br><br>
+        Chaque pièce de ce puzzle me rappelle<br>
+        combien tu rends ma vie plus belle ✨<br><br>
+        Joyeux anniversaire mon amour ❤️
+    </div>
+</div>
+
+<script>
+const puzzle = document.getElementById("puzzle");
+const message = document.getElementById("message");
+
+const size = 3;
+let pieces = [];
+let selected = null;
+
+// créer les pièces
+for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+        const piece = document.createElement("div");
+        piece.classList.add("piece");
+        piece.style.backgroundPosition = `-${x * 100}px -${y * 100}px`;
+        piece.dataset.correct = y * size + x;
+        pieces.push(piece);
+    }
+}
+
+// mélanger
+pieces.sort(() => Math.random() - 0.5);
+
+// afficher
+pieces.forEach((piece, index) => {
+    piece.dataset.current = index;
+    puzzle.appendChild(piece);
+
+    piece.addEventListener("click", () => {
+        if (!selected) {
+            selected = piece;
+            piece.classList.add("selected");
+        } else if (selected !== piece) {
+            swap(selected, piece);
+            selected.classList.remove("selected");
+            selected = null;
+            checkWin();
+        }
+    });
+});
+
+function swap(a, b) {
+    const temp = a.style.backgroundPosition;
+    a.style.backgroundPosition = b.style.backgroundPosition;
+    b.style.backgroundPosition = temp;
+
+    const tempCorrect = a.dataset.correct;
+    a.dataset.correct = b.dataset.correct;
+    b.dataset.correct = tempCorrect;
+}
+
+function checkWin() {
+    const all = document.querySelectorAll(".piece");
+    let win = true;
+
+    all.forEach((piece, index) => {
+        if (piece.dataset.correct != index) {
+            win = false;
+        }
+    });
+
+    if (win) {
+        message.style.display = "block";
+    }
+}
+</script>
+
+</body>
+</html>
